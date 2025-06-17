@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use App\Models\Borrowing;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('books', BookController::class);
     Route::post('books/{book}/borrow', [BorrowingController::class,'store'])->name('borrow.store');
     Route::post('books/{book}/return', [BorrowingController::class,'return'])->name('borrow.return');
+    Route::get('mybooks', [UserController::class,'myBooks'])->name('myBooks');
     // Route::post('books', BookController::class);
 
 });

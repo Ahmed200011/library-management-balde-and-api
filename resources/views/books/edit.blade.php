@@ -51,7 +51,7 @@
                             <label for="image" class="form-label">صورة الكتاب</label>
                             <input type="file" name="image" id="image" class="form-control">
                             @if ($book->image)
-                                <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->title }}" class="img-thumbnail mt-2" style="max-width: 200px;">
+                                <img src="{{ asset('image/books/' . $book->image) }}" alt="{{ $book->title }}" class="img-thumbnail mt-2" style="max-width: 200px;">
                             @endif
                         </div>
 

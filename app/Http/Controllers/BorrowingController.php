@@ -34,7 +34,8 @@ class BorrowingController extends Controller
 
 
 
-        $borrowing->update(['returned_at' => now()]);
+        // $borrowing->update(['returned_at' => now()]);
+        $borrowing->delete();
         $book->update(['status' => 'available']);
 
         return redirect()->route('books.index')->with('success', 'تم إرجاع الكتاب بنجاح.');

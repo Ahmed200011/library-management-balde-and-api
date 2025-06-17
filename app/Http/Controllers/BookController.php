@@ -6,11 +6,16 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Laravel\Facades\Image;
+
+
 
 class BookController extends Controller implements HasMiddleware
 
 {
-      public static function middleware(): array
+    public static function middleware(): array
     {
         return [
             'auth',
@@ -48,9 +53,25 @@ class BookController extends Controller implements HasMiddleware
             'status' => 'required|in:available,borrowed',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional image validation
         ]);
+        if ($request->hasFile('image')) {
+            $file = Request()->file('image');
+            $name = Request()->file('image')->getClientOriginalName();
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            $image_name = uniqid() . $name;
+            $image->resize(354,  220); // Adjust the height and width as needed
+            $image->save(public_path('image/books/') . $image_name);
+        }
 
 
-        Book::create($request->all());
+        Book::create([
+            'title' => $request->title,
+            'author' => $request->author,
+            'category' => $request->category,
+            'description' => $request->description,
+            'status' => $request->status,
+            'image' => isset($image_name) ? $image_name : null, // Save image name if exists
+        ]);
 
         return redirect()->route('books.index')->with('success', 'Book created successfully.');
     }
@@ -76,7 +97,7 @@ class BookController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Book $book)
     {
-         $request->validate([
+        $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
             'category' => 'required|string|max:255',
@@ -85,8 +106,33 @@ class BookController extends Controller implements HasMiddleware
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional image validation
         ]);
 
+        if ($request->hasFile('image')) {
+            $file = Request()->file('image');
+            $name = Request()->file('image')->getClientOriginalName();
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            $image_name = uniqid() . $name;
+            $image->resize(354,  220); // Adjust the height and width as needed
+            $image->save(public_path('image/books/') . $image_name);
+        } else {
+            $image_name = $book->image;
+        }
+        if ($book->image) {
+            $imagePath = public_path('image/book/' . $book->image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
 
-        $book->update($request->all());
+
+        $book->update([
+            'title' => $request->title,
+            'author' => $request->author,
+            'category' => $request->category,
+            'description' => $request->description,
+            'status' => $request->status,
+            'image' => isset($image_name) ? $image_name : null, // Save image name if exists
+        ]);
         return redirect()->route('books.index')->with('success', 'Book updated successfully.');
     }
 
@@ -95,7 +141,16 @@ class BookController extends Controller implements HasMiddleware
      */
     public function destroy(Book $book)
     {
+        // dd($book);
+        if ($book->image) {
+            $imagePath = public_path('image/book/' . $book->image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
         $book->delete();
+        // return response()->json(['message' => 'تم حذف الكتاب بنجاح']);
+
 
         return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
     }

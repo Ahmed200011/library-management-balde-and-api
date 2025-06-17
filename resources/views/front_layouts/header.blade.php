@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+
 
 
     <title>@yield('page_title')</title>
@@ -13,19 +15,19 @@
 
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-dark-subtle shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/">نظام المكتبة</a>
+        <a class="navbar-brand fw-bold " href="/">نظام المكتبة</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">الصفحة الرئيسية</a>
+                    <a class="nav-link" href="{{ route('books.index') }}">الصفحة الرئيسية</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('books.index') }}">كتبي</a>
+                    <a class="nav-link" href="{{ route('myBooks') }}">كتبي</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/suggestions">مقترحات</a>
@@ -58,4 +60,7 @@
         </div>
     </div>
 </nav>
+<!-- From Uiverse.io by SelfMadeSystem -->
+{{-- <div class="containera"> --}}
+
 
