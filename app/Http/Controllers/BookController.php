@@ -8,7 +8,6 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-use Intervention\Image\Laravel\Facades\Image;
 
 
 
@@ -54,8 +53,8 @@ class BookController extends Controller implements HasMiddleware
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Optional image validation
         ]);
         if ($request->hasFile('image')) {
-            $file = Request()->file('image');
-            $name = Request()->file('image')->getClientOriginalName();
+            $file = $request->file('image');
+            $name = $file('image')->getClientOriginalName();
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
             $image_name = uniqid() . $name;
@@ -107,8 +106,8 @@ class BookController extends Controller implements HasMiddleware
         ]);
 
         if ($request->hasFile('image')) {
-            $file = Request()->file('image');
-            $name = Request()->file('image')->getClientOriginalName();
+            $file = $request->file('image');
+            $name = $file('image')->getClientOriginalName();
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
             $image_name = uniqid() . $name;
